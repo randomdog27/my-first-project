@@ -8,35 +8,47 @@
         body {
             overflow: hidden;
             margin: 0;
-            background: #87CEEB;
+            background: linear-gradient(135deg, #87CEEB 0%, #E0F6FF 100%);
             position: relative;
+            font-size: 40px;
+            height: 100vh;
         }
         .flower {
-            position: absolute;
-            animation: fall linear infinite;
+            position: fixed;
+            user-select: none;
+            pointer-events: none;
         }
         @keyframes fall {
-            0% { transform: translateY(-100px); }
-            100% { transform: translateY(100vh); }
+            0% {
+                opacity: 1;
+                transform: translateY(-50px) rotateZ(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotateZ(360deg);
+            }
         }
     </style>
 </head>
 <body>
     <script>
+        const flowers = ['🌸', '🌼', '🌺', '🥀', '🌷', '🌻'];
+        
         const createFlower = () => {
-            const flower = document.createElement('img');
-            flower.src = 'https://example.com/path/to/flower.png';
+            const flower = document.createElement('div');
+            flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
             flower.className = 'flower';
             flower.style.left = Math.random() * window.innerWidth + 'px';
-            flower.style.animationDuration = Math.random() * 3 + 2 + 's';
+            flower.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            flower.style.animation = 'fall linear forwards';
+            
             document.body.appendChild(flower);
-
-            // Remove flower after animation
-            flower.addEventListener('animationend', () => {
+            
+            setTimeout(() => {
                 flower.remove();
-            });
+            }, 5000);
         };
-
+        
         setInterval(createFlower, 300);
     </script>
 </body>
