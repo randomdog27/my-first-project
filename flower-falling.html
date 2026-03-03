@@ -3,46 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Falling Flowers Animation</title>
+    <title>Falling Flowers with Wind</title>
     <style>
-        body {
-            overflow: hidden;
+        * {
             margin: 0;
-            background-color: #87CEEB;
+            padding: 0;
+            box-sizing: border-box;
         }
+        
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #87CEEB 0%, #E0F6FF 100%);
+        }
+        
         .flower {
-            position: absolute;
-            opacity: 0;
-            transition: opacity 2s, transform 2s;
+            position: fixed;
+            font-size: 2.5rem;
+            user-select: none;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
     <script>
+        const flowers = ['🌸', '🌼', '🌺', '🥀', '🌷', '🌻'];
+        
         function createFlower() {
-            const flower = document.createElement('img');
-            flower.src = 'https://example.com/flower.png'; // Placeholder for flower image
-            flower.classList.add('flower');
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+            
+            const startX = Math.random() * window.innerWidth;
+            const startY = -50;
+            
+            flower.style.left = startX + 'px';
+            flower.style.top = startY + 'px';
+            flower.style.opacity = '1';
+            flower.style.transition = 'none';
+            
             document.body.appendChild(flower);
-
-            const x = Math.random() * window.innerWidth;
-            flower.style.left = x + 'px';
-            flower.style.transform = `translateY(-100px) rotate(${Math.random() * 360}deg)`;
-            flower.style.opacity = 1;
-
-            const fallDuration = Math.random() * 3 + 5;
-            const sway = Math.sin(Date.now() / 1000 + x) * 20;
-
-            setTimeout(() => {
-                flower.style.transform = `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 360}deg) translateX(${sway}px)`;
-                flower.style.opacity = 0;
-                setTimeout(() => flower.remove(), 2000);
-            }, 50);
-
-            setTimeout(createFlower, 500);
+            
+            let y = startY;
+            let x = startX;
+            let rotation = 0;
+            let windForce = Math.sin(Date.now() / 500) * 50;
+            let sway = Math.random() * 2 - 1;
+            
+            const fall = setInterval(() => {
+                y += Math.random() * 3 + 1;
+                x += sway + windForce * 0.01;
+                rotation += Math.random() * 10 - 5;
+                
+                // Wind effect
+                windForce = Math.sin(Date.now() / 800) * 30;
+                
+                // Boundary check
+                if (x < 0) x = window.innerWidth;
+                if (x > window.innerWidth) x = 0;
+                
+                flower.style.left = x + 'px';
+                flower.style.top = y + 'px';
+                flower.style.transform = `rotate(${rotation}deg) scale(${0.8 + Math.sin(rotation / 180 * Math.PI) * 0.2})`;
+                
+                if (y > window.innerHeight) {
+                    clearInterval(fall);
+                    flower.style.opacity = '0';
+                    flower.style.transition = 'opacity 0.5s ease-out';
+                    setTimeout(() => flower.remove(), 500);
+                }
+            }, 30);
         }
-
-        createFlower();
+        
+        // Create flowers continuously
+        setInterval(createFlower, 400);
+        
+        // Create initial flowers
+        for (let i = 0; i < 5; i++) {
+            setTimeout(createFlower, i * 200);
+        }
     </script>
 </body>
 </html>
