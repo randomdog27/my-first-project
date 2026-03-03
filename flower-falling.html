@@ -1,53 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Falling Flowers</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
             overflow: hidden;
-            background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
-            height: 100vh;
+            background-color: #87CEEB;
+            margin: 0;
         }
-        
-        .petal {
+        .flower {
             position: absolute;
-            font-size: 3rem;
-            opacity: 0.8;
+            width: 50px;
+            height: 50px;
+            background-image: url('flower.png');
+            background-size: contain;
+            animation: fall 5s infinite;    
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+            }
+            50% {
+                transform: translateY(80vh) rotate(20deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
-
 <script>
-    const petals = ['🌸', '🌼', '🌺', '🥀', '🌷'];
-    
-    function createPetal() {
-        const petal = document.createElement('div');
-        petal.className = 'petal';
-        petal.innerHTML = petals[Math.floor(Math.random() * petals.length)];
-        petal.style.left = Math.random() * window.innerWidth + 'px';
-        petal.style.top = '-50px';
-        
-        document.body.appendChild(petal);
-        
-        let top = -50;
-        const speed = Math.random() * 2 + 1;
-        
-        const fall = setInterval(() => {
-            top += speed;
-            petal.style.top = top + 'px';
-            
-            if (top > window.innerHeight) {
-                clearInterval(fall);
-                petal.remove();
-            }
-        }, 20);
+    function createFlower() {
+        const flower = document.createElement('div');
+        flower.className = 'flower';
+        flower.style.left = Math.random() * 100 + 'vw';
+        flower.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        document.body.appendChild(flower);
+        setTimeout(() => {
+            flower.remove();
+        }, 5000);
     }
-    
-    setInterval(createPetal, 500);
+    setInterval(createFlower, 300);
 </script>
-
 </body>
 </html>
