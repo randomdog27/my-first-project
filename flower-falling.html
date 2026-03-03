@@ -1,42 +1,41 @@
 <script>
-const flowers = ['🌸', '🌼', '🌺', '🥀', '🌷', '🌻'];
+const flowers = ['🌸', '🌼', '🌺', '🌷'];
 
 function createFlower() {
     const flower = document.createElement('div');
     flower.className = 'flower';
     flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
 
-    let x = Math.random() * window.innerWidth;
+    const startX = Math.random() * window.innerWidth;
     let y = -50;
 
-    // vật lý tự nhiên hơn
-    let velocityY = 0; 
-    const gravity = 0.05 + Math.random() * 0.05;
+    let velocityY = 0;
+    const gravity = 0.02 + Math.random() * 0.015; // rơi rất nhẹ
 
-    const swayAmplitude = 20 + Math.random() * 30; // độ lắc ngang
-    const swaySpeed = 0.001 + Math.random() * 0.002;
+    const swayAmplitude = 15 + Math.random() * 20; // độ lắc ngang nhỏ
+    const swaySpeed = 0.0008 + Math.random() * 0.0008; // rất chậm
 
     let rotation = Math.random() * 360;
-    const rotationSpeed = (Math.random() - 0.5) * 0.3;
+    const rotationSpeed = (Math.random() - 0.5) * 0.1; // xoay rất nhẹ
 
-    flower.style.left = x + 'px';
-    flower.style.top = y + 'px';
     document.body.appendChild(flower);
 
     function animate(timestamp) {
+
+        // rơi xuống mềm mại
         velocityY += gravity;
         y += velocityY;
 
-        // lắc ngang mượt theo sóng sin
-        x += Math.sin(timestamp * swaySpeed) * 0.5;
+        // dao động quanh vị trí gốc (không cộng dồn)
+        const swayX = Math.sin(timestamp * swaySpeed) * swayAmplitude;
 
-        // gió nhẹ, thay đổi chậm
-        const wind = Math.sin(timestamp * 0.0005) * 0.3;
-        x += wind;
+        // gió nhẹ rất chậm
+        const wind = Math.sin(timestamp * 0.0003) * 10;
 
         rotation += rotationSpeed;
 
-        flower.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
+        flower.style.transform =
+            `translate(${startX + swayX + wind}px, ${y}px) rotate(${rotation}deg)`;
 
         if (y < window.innerHeight + 50) {
             requestAnimationFrame(animate);
@@ -48,11 +47,10 @@ function createFlower() {
     requestAnimationFrame(animate);
 }
 
-// tạo hoa liên tục nhưng nhẹ hơn
-setInterval(createFlower, 600);
+// tạo thưa hơn cho cảm giác mùa xuân nhẹ
+setInterval(createFlower, 900);
 
-// tạo ban đầu
-for (let i = 0; i < 5; i++) {
-    setTimeout(createFlower, i * 300);
+for (let i = 0; i < 4; i++) {
+    setTimeout(createFlower, i * 400);
 }
 </script>
